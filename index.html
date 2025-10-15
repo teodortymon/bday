@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Congrats!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #FFD1DC;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        .columns-container {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .column {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hippo {
+            position: absolute;
+            font-size: 6rem;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0.8;
+            animation-duration: 10s;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+        }
+
+        .hippo .crown {
+            font-size: 0.25em;
+            margin-bottom: -0.08em;
+            margin-left: -0.13em;
+        }
+
+        .hippo-up {
+            animation-name: flyUp;
+        }
+
+        .hippo-down {
+            animation-name: flyDown;
+        }
+
+        @keyframes flyUp {
+            0% {
+                transform: translateX(-50%) translateY(100vh);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.8;
+            }
+            90% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateX(-50%) translateY(-10vh);
+                opacity: 0;
+            }
+        }
+
+        @keyframes flyDown {
+            0% {
+                transform: translateX(-50%) translateY(-10vh) rotate(180deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.8;
+            }
+            90% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateX(-50%) translateY(100vh) rotate(180deg);
+                opacity: 0;
+            }
+        }
+
+        .congrats-box {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border: 6px solid white;
+            border-radius: 20px;
+            padding: 2.1rem 2.8rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            text-align: center;
+        }
+
+        .congrats-box h1 {
+            font-size: 3rem;
+            color: #FF69B4;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .congrats-box h2 {
+            font-size: 1.2rem;
+            color: #666;
+            font-weight: normal;
+            margin-top: 1.5rem;
+            line-height: 1.8;
+            font-style: italic;
+        }
+
+        .congrats-box p {
+            font-size: 1rem;
+            color: #999;
+            margin-top: 1rem;
+            font-style: normal;
+        }
+
+        @media (max-width: 768px) {
+            .hippo {
+                font-size: 4.5rem;
+            }
+
+            .congrats-box {
+                padding: 1.4rem 2.1rem;
+            }
+
+            .congrats-box h1 {
+                font-size: 2.5rem;
+            }
+
+            .congrats-box h2 {
+                font-size: 1rem;
+            }
+
+            .congrats-box p {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hippo {
+                font-size: 3.6rem;
+            }
+
+            .congrats-box {
+                padding: 1.05rem 1.75rem;
+            }
+
+            .congrats-box h1 {
+                font-size: 2rem;
+            }
+
+            .congrats-box h2 {
+                font-size: 0.9rem;
+            }
+
+            .congrats-box p {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="columns-container">
+        <div class="column" data-column="1"></div>
+        <div class="column" data-column="2"></div>
+        <div class="column" data-column="3"></div>
+        <div class="column" data-column="4"></div>
+        <div class="column" data-column="5"></div>
+        <div class="column" data-column="6"></div>
+    </div>
+
+    <div class="congrats-box">
+        <h1>Well done Bu!</h1>
+        <p>But this is just the first puzzle...</p>
+        <h2>
+            The wrench knows the way<br>
+            Follow where its head points<br>
+            In the fusebox waits
+        </h2>
+
+    </div>
+
+    <script>
+        // Generate flying hippos for each column
+        const columns = document.querySelectorAll('.column');
+        const hipposPerColumn = 8; // Number of hippos per column
+        const animationDuration = 10; // seconds - uniform for all hippos
+
+        columns.forEach((column, columnIndex) => {
+            // Odd columns (1, 3, 5) go up, even columns (2, 4, 6) go down
+            const goesUp = columnIndex % 2 === 0;
+            const directionClass = goesUp ? 'hippo-up' : 'hippo-down';
+
+            for (let i = 0; i < hipposPerColumn; i++) {
+                const hippo = document.createElement('div');
+                hippo.className = `hippo ${directionClass}`;
+
+                const crown = document.createElement('div');
+                crown.className = 'crown';
+                crown.textContent = '👑';
+
+                const hippoBody = document.createElement('div');
+                hippoBody.textContent = '🦛';
+
+                hippo.appendChild(crown);
+                hippo.appendChild(hippoBody);
+
+                // Evenly space hippos throughout the animation cycle
+                const delay = -(i * animationDuration / hipposPerColumn);
+                hippo.style.animationDelay = `${delay}s`;
+
+                column.appendChild(hippo);
+            }
+        });
+    </script>
+</body>
+</html>
