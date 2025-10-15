@@ -187,7 +187,6 @@
             font-size: 1.5rem;
             color: #2E8B57;
             margin-bottom: 1rem;
-            cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -197,6 +196,17 @@
             background: #f0f8f0;
             border-radius: 10px;
             border: 2px solid transparent;
+            cursor: pointer;
+            position: relative;
+            width: 100%;
+        }
+
+        .hint-section {
+            cursor: default;
+        }
+
+        .hint-section .hint-content {
+            cursor: default;
         }
 
         .hint-section h2:hover {
@@ -237,7 +247,7 @@
         .hint-content {
             max-height: 2000px;
             overflow: visible;
-            transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+            transition: max-height 0.3s ease-out, opacity 0.3s ease-out, overflow 0s;
             opacity: 1;
             padding-bottom: 1rem;
         }
@@ -246,6 +256,8 @@
             max-height: 0;
             opacity: 0;
             padding-bottom: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, opacity 0.3s ease-out, overflow 0s 0.3s;
         }
 
         .hint-section p {
@@ -569,6 +581,10 @@
                     <div class="crossword-question">Second password</div>
                     <div class="crossword-answer" onclick="this.classList.toggle('revealed')">fith</div>
                 </div>
+                <div class="crossword-item">
+                    <div class="crossword-question">Secret keyword after saving calendar</div>
+                    <div class="crossword-answer" onclick="this.classList.toggle('revealed')">fith - send it to me on messenger</div>
+                </div>
             </div>
         </div>
     </div>
@@ -579,6 +595,8 @@
 
         hintSections.forEach(section => {
             const header = section.querySelector('h2');
+
+            // Only the header (h2) can toggle the section
             header.addEventListener('click', () => {
                 section.classList.toggle('collapsed');
             });

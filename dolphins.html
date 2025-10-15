@@ -41,7 +41,7 @@
             left: 50%;
             transform: translateX(-50%);
             opacity: 0.8;
-            animation-duration: 10s;
+            animation-duration: 13s;
             animation-timing-function: linear;
             animation-iteration-count: infinite;
             display: flex;
@@ -266,6 +266,10 @@
         }
 
         @media (max-width: 768px) {
+            body {
+                overflow: auto;
+            }
+
             .hippo {
                 font-size: 4.5rem;
             }
@@ -274,6 +278,7 @@
                 min-width: 320px;
                 width: 90vw;
                 max-width: 500px;
+                top: 35%;
             }
 
             .card-front, .card-back {
@@ -347,6 +352,7 @@
             .congrats-box {
                 min-width: 280px;
                 width: 90vw;
+                top: 30%;
             }
 
             .card-front, .card-back {
@@ -452,12 +458,11 @@
             <p>Have a nice birthday my love</p>
         </div>
     </div>
-ś
     <script>
         // Generate flying dolphins for each column
         const columns = document.querySelectorAll('.column');
         const hipposPerColumn = 8; // Number of dolphins per column
-        const animationDuration = 10; // seconds - uniform for all dolphins
+        const animationDuration = 13; // seconds - uniform for all dolphins
 
         columns.forEach((column, columnIndex) => {
             // Odd columns (1, 3, 5) go up, even columns (2, 4, 6) go down
