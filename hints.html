@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hints</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #90EE90;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        .dove {
+            position: fixed;
+            font-size: 3rem;
+            opacity: 0.8;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+            z-index: 1;
+        }
+
+
+        .fly-left {
+            animation-name: flyLeft;
+        }
+
+        .fly-right {
+            animation-name: flyRight;
+        }
+
+        .fly-diagonal-up {
+            animation-name: flyDiagonalUp;
+        }
+
+        .fly-diagonal-down {
+            animation-name: flyDiagonalDown;
+        }
+
+        .fly-wave {
+            animation-name: flyWave;
+        }
+
+        @keyframes flyLeft {
+            0% {
+                transform: translateX(120vw) translateY(0) scaleX(1);
+                opacity: 0;
+            }
+            5% {
+                opacity: 0.8;
+            }
+            95% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateX(-20vw) translateY(0) scaleX(1);
+                opacity: 0;
+            }
+        }
+
+        @keyframes flyRight {
+            0% {
+                transform: translateX(-20vw) translateY(0) scaleX(-1);
+                opacity: 0;
+            }
+            5% {
+                opacity: 0.8;
+            }
+            95% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateX(120vw) translateY(0) scaleX(-1);
+                opacity: 0;
+            }
+        }
+
+        @keyframes flyDiagonalUp {
+            0% {
+                transform: translateX(-20vw) translateY(20vh) scaleX(-1);
+                opacity: 0;
+            }
+            5% {
+                opacity: 0.8;
+            }
+            95% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateX(120vw) translateY(-10vh) scaleX(-1);
+                opacity: 0;
+            }
+        }
+
+        @keyframes flyDiagonalDown {
+            0% {
+                transform: translateX(120vw) translateY(-10vh) scaleX(1);
+                opacity: 0;
+            }
+            5% {
+                opacity: 0.8;
+            }
+            95% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateX(-20vw) translateY(20vh) scaleX(1);
+                opacity: 0;
+            }
+        }
+
+        @keyframes flyWave {
+            0% {
+                transform: translateX(-20vw) translateY(0) scaleX(-1);
+                opacity: 0;
+            }
+            5% {
+                opacity: 0.8;
+            }
+            25% {
+                transform: translateX(25vw) translateY(-5vh) scaleX(-1);
+            }
+            50% {
+                transform: translateX(50vw) translateY(0) scaleX(-1);
+            }
+            75% {
+                transform: translateX(75vw) translateY(-5vh) scaleX(-1);
+            }
+            95% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateX(120vw) translateY(0) scaleX(-1);
+                opacity: 0;
+            }
+        }
+
+        .hints-box {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border: 6px solid white;
+            border-radius: 20px;
+            padding: 2.1rem 2.8rem 3rem 2.8rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            text-align: left;
+            max-width: 600px;
+            width: 90vw;
+            max-height: 80vh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .hints-box h1 {
+            font-size: 2.5rem;
+            color: #228B22;
+            font-weight: bold;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .hint-section {
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid #E0E0E0;
+        }
+
+        .hint-section:last-child {
+            border-bottom: none;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+        }
+
+        .hint-section h2 {
+            font-size: 1.5rem;
+            color: #2E8B57;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+            transition: all 0.3s;
+            padding: 0.8rem 1rem;
+            background: #f0f8f0;
+            border-radius: 10px;
+            border: 2px solid transparent;
+        }
+
+        .hint-section h2:hover {
+            color: #228B22;
+            background: #e0f0e0;
+            border-color: #90EE90;
+            transform: translateX(5px);
+        }
+
+        .hint-section h2::before {
+            content: '▶';
+            font-size: 1.2rem;
+            margin-right: 0.8rem;
+            transition: transform 0.3s;
+            color: #228B22;
+        }
+
+        .hint-section.collapsed h2::before {
+            transform: rotate(0deg);
+        }
+
+        .hint-section:not(.collapsed) h2::before {
+            transform: rotate(90deg);
+        }
+
+        .hint-section h2::after {
+            content: 'Click to expand';
+            font-size: 0.8rem;
+            color: #999;
+            font-weight: normal;
+            font-style: italic;
+        }
+
+        .hint-section:not(.collapsed) h2::after {
+            content: 'Click to collapse';
+        }
+
+        .hint-content {
+            max-height: 2000px;
+            overflow: visible;
+            transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+            opacity: 1;
+            padding-bottom: 1rem;
+        }
+
+        .hint-section.collapsed .hint-content {
+            max-height: 0;
+            opacity: 0;
+            padding-bottom: 0;
+        }
+
+        .hint-section p {
+            font-size: 1rem;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .hint-section ul {
+            margin-top: 0.5rem;
+            margin-left: 1.5rem;
+        }
+
+        .hint-section li {
+            font-size: 1rem;
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 0.5rem;
+        }
+
+        .crossword-item {
+            margin-bottom: 1rem;
+        }
+
+        .crossword-question {
+            font-weight: 500;
+            color: #2E8B57;
+            margin-bottom: 0.3rem;
+        }
+
+        .crossword-answer {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background: #333;
+            color: #333;
+            border-radius: 5px;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.3s;
+            font-family: monospace;
+            font-weight: bold;
+        }
+
+        .crossword-answer:hover {
+            background: #555;
+        }
+
+        .crossword-answer.revealed {
+            background: #e0f0e0;
+            color: #228B22;
+        }
+
+        .crossword-answer a {
+            color: #228B22;
+            text-decoration: underline;
+            word-break: break-all;
+        }
+
+        .crossword-answer.revealed a {
+            pointer-events: auto;
+        }
+
+        .clickable-link {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: #228B22;
+            color: white !important;
+            border-radius: 8px;
+            text-decoration: none !important;
+            font-weight: bold;
+            margin-top: 0.5rem;
+            transition: background 0.3s;
+            min-height: 44px;
+            line-height: 1.4;
+            text-align: center;
+        }
+
+        .clickable-link:hover {
+            background: #2E8B57;
+        }
+
+        .clickable-link:active {
+            background: #1a6b32;
+        }
+
+        .crossword-section {
+            margin-top: 1rem;
+        }
+
+        .crossword-section h3 {
+            font-size: 1.1rem;
+            color: #228B22;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .dove {
+                font-size: 2.5rem;
+            }
+
+            .hints-box {
+                padding: 1.4rem 2.1rem 3rem 2.1rem;
+                max-height: 90vh;
+            }
+
+            .hints-box h1 {
+                font-size: 2rem;
+            }
+
+            .hint-section h2 {
+                font-size: 1.3rem;
+                padding: 0.7rem 0.8rem;
+            }
+
+            .hint-section h2::after {
+                font-size: 0.75rem;
+            }
+
+            .hint-section p,
+            .hint-section li {
+                font-size: 0.95rem;
+            }
+
+            .crossword-question {
+                font-size: 0.95rem;
+            }
+
+            .crossword-answer {
+                font-size: 0.9rem;
+                padding: 0.25rem 0.6rem;
+            }
+
+            .crossword-section h3 {
+                font-size: 1rem;
+            }
+
+            .clickable-link {
+                padding: 0.6rem 1.2rem;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .dove {
+                font-size: 2rem;
+            }
+
+            .hints-box {
+                padding: 1.05rem 1.75rem 3.5rem 1.75rem;
+                max-height: 92vh;
+            }
+
+            .hints-box h1 {
+                font-size: 1.8rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .hint-section {
+                margin-bottom: 1.5rem;
+                padding-bottom: 1.5rem;
+            }
+
+            .hint-section h2 {
+                font-size: 1.2rem;
+                padding: 0.6rem 0.7rem;
+            }
+
+            .hint-section h2::before {
+                font-size: 1rem;
+                margin-right: 0.5rem;
+            }
+
+            .hint-section h2::after {
+                font-size: 0.7rem;
+            }
+
+            .hint-section p,
+            .hint-section li {
+                font-size: 0.9rem;
+            }
+
+            .crossword-question {
+                font-size: 0.9rem;
+            }
+
+            .crossword-answer {
+                font-size: 0.85rem;
+                padding: 0.2rem 0.5rem;
+            }
+
+            .crossword-section h3 {
+                font-size: 0.95rem;
+            }
+
+            .clickable-link {
+                padding: 0.7rem 1.3rem;
+                font-size: 1.1rem;
+                width: 100%;
+                box-sizing: border-box;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hints-box">
+        <h1>Hints 🕊️</h1>
+
+        <div class="hint-section collapsed">
+            <h2>1. Crossword Hints</h2>
+            <div class="hint-content">
+                <p>Click on the dark boxes to reveal answers:</p>
+
+                <div class="crossword-section">
+                    <h3>Across</h3>
+
+                    <div class="crossword-item">
+                        <div class="crossword-question">1. Who's lovesong does Oppenheimer read aloud?</div>
+                        <div class="crossword-answer" onclick="this.classList.toggle('revealed')">prufrock</div>
+                    </div>
+
+                    <div class="crossword-item">
+                        <div class="crossword-question">4. Fattest bear of the year</div>
+                        <div class="crossword-answer" onclick="this.classList.toggle('revealed')">32chunk</div>
+                    </div>
+
+                    <div class="crossword-item">
+                        <div class="crossword-question">6. Dish that started Bebe's food photography influencer career in Sundsvall</div>
+                        <div class="crossword-answer" onclick="this.classList.toggle('revealed')">gnocchi</div>
+                    </div>
+
+                    <div class="crossword-item">
+                        <div class="crossword-question">7. Bread meat we made for friends</div>
+                        <div class="crossword-answer" onclick="this.classList.toggle('revealed')">seitan</div>
+                    </div>
+                </div>
+
+                <div class="crossword-section">
+                    <h3>Down</h3>
+
+                    <div class="crossword-item">
+                        <div class="crossword-question">2. Dish we made together on an italian cooking class</div>
+                        <div class="crossword-answer" onclick="this.classList.toggle('revealed')">cacciatore</div>
+                    </div>
+
+                    <div class="crossword-item">
+                        <div class="crossword-question">3. What boyo dressed as for Tryggvis haloween party</div>
+                        <div class="crossword-answer" onclick="this.classList.toggle('revealed')">penguin</div>
+                    </div>
+
+                    <div class="crossword-item">
+                        <div class="crossword-question">5. Market we really liked in London</div>
+                        <div class="crossword-answer" onclick="this.classList.toggle('revealed')">borough</div>
+                    </div>
+                </div>
+
+                <div class="crossword-section">
+                    <h3>Final step</h3>
+
+                    <div class="crossword-item">
+                        <div class="crossword-question">Solution of the crossword</div>
+                        <div class="crossword-answer" onclick="this.classList.toggle('revealed')">
+                            Click to reveal link
+                        </div>
+                        <a href="https://bit.ly/soup32" class="clickable-link" style="display: none;" id="soup-link" target="_blank">
+                            Go to the next puzzle 🦛🦛🦛
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="hint-section collapsed">
+            <h2>2. Finding Item Hints</h2>
+            <div class="hint-content">
+                <p style="font-style: italic; color: #2E8B57; line-height: 1.6;">
+                    The wrench knows the way<br>
+                    Follow where its head points<br>
+                    In the fusebox waits
+                </p>
+                <p style="margin-top: 1rem;">Click on the dark boxes to reveal hints:</p>
+
+                <div class="crossword-item">
+                    <div class="crossword-question">1. First location to check</div>
+                    <div class="crossword-answer" onclick="this.classList.toggle('revealed')">Look in the fusebox</div>
+                </div>
+
+                <div class="crossword-item">
+                    <div class="crossword-question">2. Where to find the next clue</div>
+                    <div class="crossword-answer" onclick="this.classList.toggle('revealed')">Under the wrench in a gummy battery holder</div>
+                </div>
+
+                <div class="crossword-item">
+                    <div class="crossword-question">3. What to do next</div>
+                    <div class="crossword-answer" onclick="this.classList.toggle('revealed')">Open a small book</div>
+                </div>
+
+                <div class="crossword-item">
+                    <div class="crossword-question">4. Final destination</div>
+                    <div class="crossword-answer" onclick="this.classList.toggle('revealed')">
+                        Click to reveal link
+                    </div>
+                    <a href="https://teodortymon.github.io/bday/dolphins.html" class="clickable-link" style="display: none;" id="dolphin-link" target="_blank">
+                        🐬 Go to the next puzzle 🐬
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="hint-section collapsed">
+            <h2>3. Solving Riddle Hints</h2>
+            <div class="hint-content">
+                <p>Stuck on the riddles? Click on the dark boxes to reveal passwords:</p>
+
+                <div class="crossword-item">
+                    <div class="crossword-question">First password</div>
+                    <div class="crossword-answer" onclick="this.classList.toggle('revealed')">fish</div>
+                </div>
+
+                <div class="crossword-item">
+                    <div class="crossword-question">Second password</div>
+                    <div class="crossword-answer" onclick="this.classList.toggle('revealed')">fith</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle hint sections
+        const hintSections = document.querySelectorAll('.hint-section');
+
+        hintSections.forEach(section => {
+            const header = section.querySelector('h2');
+            header.addEventListener('click', () => {
+                section.classList.toggle('collapsed');
+            });
+        });
+
+        // Show soup link when answer is revealed
+        const soupLink = document.getElementById('soup-link');
+
+        if (soupLink) {
+            // Find the answer box in the same crossword-item as the soup link
+            const soupAnswerBox = soupLink.parentElement.querySelector('.crossword-answer');
+
+            if (soupAnswerBox) {
+                soupAnswerBox.addEventListener('click', function() {
+                    if (this.classList.contains('revealed')) {
+                        soupLink.style.display = 'inline-block';
+                    } else {
+                        soupLink.style.display = 'none';
+                    }
+                });
+            }
+        }
+
+        // Show dolphin link when answer is revealed
+        const dolphinLink = document.getElementById('dolphin-link');
+
+        if (dolphinLink) {
+            // Find the answer box in the same crossword-item as the dolphin link
+            const dolphinAnswerBox = dolphinLink.parentElement.querySelector('.crossword-answer');
+
+            if (dolphinAnswerBox) {
+                dolphinAnswerBox.addEventListener('click', function() {
+                    if (this.classList.contains('revealed')) {
+                        dolphinLink.style.display = 'inline-block';
+                    } else {
+                        dolphinLink.style.display = 'none';
+                    }
+                });
+            }
+        }
+
+        // Generate flying doves across the screen
+        const numberOfDoves = 30;
+        const animationTypes = ['fly-left', 'fly-right', 'fly-diagonal-up', 'fly-diagonal-down', 'fly-wave'];
+
+        for (let i = 0; i < numberOfDoves; i++) {
+            const dove = document.createElement('div');
+            dove.className = 'dove';
+
+            // Randomly choose animation type
+            const randomAnimation = animationTypes[Math.floor(Math.random() * animationTypes.length)];
+            dove.classList.add(randomAnimation);
+
+            // Random vertical position (0% to 95% of viewport height)
+            const topPosition = Math.random() * 95;
+            dove.style.top = `${topPosition}vh`;
+
+            // Set dove emoji
+            dove.textContent = '🕊️';
+
+            // Random delay (0 to 10 seconds)
+            const delay = Math.random() * 10;
+            dove.style.animationDelay = `-${delay}s`;
+
+            // Random duration (8 to 15 seconds for variety)
+            const duration = 8 + Math.random() * 7;
+            dove.style.animationDuration = `${duration}s`;
+
+            document.body.appendChild(dove);
+        }
+    </script>
+</body>
+</html>
